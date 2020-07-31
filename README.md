@@ -1,6 +1,6 @@
 # Conversion-between-D2887-SimDis-to-TBP-vol
 
-## Conversion between D2887 weight % (SimDis) to TBP volumeric % based on API Technical Book 1997.
+### Conversion between D2887 weight % (SimDis) to TBP volumeric % based on API Technical Book 1997.
 
 There are two ways how to calculate TBP vol%:
 	1. Direct way (from D2887 wt% to TBP vol%);
