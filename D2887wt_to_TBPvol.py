@@ -7,34 +7,32 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-LFO_D2887_inp = {"Cutpoints": [1, 5, 10, 30, 50, 70, 90, 95],
-				 "Temp": [218, 272, 302, 361, 383, 399, 419, 436]}
 
-def D2887wtSIMDIStoTBPvol(D2887_inp, plottt):
+def D2887wt_to_TBPvol(D2887_inp, plottt):
 	order = 5
-	LFO = np.polyfit(LFO_D2887_inp["Cutpoints"], LFO_D2887_inp["Temp"], order)
+	LFO = np.polyfit(D2887_inp["Cutpoints"], D2887_inp["Temp"], order)
 
 	CP_step = round((95-1)/4)
 	print(CP_step)
 
-	LFO_D2887_CP = np.linspace(min(LFO_D2887_inp["Cutpoints"]), max(LFO_D2887_inp["Cutpoints"]), CP_step)
+	D2887_CP = np.linspace(min(D2887_inp["Cutpoints"]), max(D2887_inp["Cutpoints"]), CP_step)
 
-	LFO_D2887_Temp = LFO[5] + LFO[4]*LFO_D2887_CP + LFO[3]*pow(LFO_D2887_CP,2) + LFO[2]*pow(LFO_D2887_CP, 3) + LFO[1]*pow(LFO_D2887_CP, 4) + LFO[0]*pow(LFO_D2887_CP, 5)
+	D2887_Temp = LFO[5] + LFO[4]*D2887_CP + LFO[3]*pow(D2887_CP,2) + LFO[2]*pow(D2887_CP, 3) + LFO[1]*pow(D2887_CP, 4) + LFO[0]*pow(D2887_CP, 5)
 
-	LFO_D2887_calc = {"Cutpoints": LFO_D2887_CP,
-				  "Temp": LFO_D2887_Temp}
+	D2887_calc = {"Cutpoints": D2887_CP,
+				  "Temp": D2887_Temp}
 
 	if plottt == True:
 		plt.figure(1)
-		plt.plot(LFO_D2887_inp["Cutpoints"], LFO_D2887_inp["Temp"], LFO_D2887_calc["Cutpoints"], LFO_D2887_calc["Temp"])
+		plt.plot(D2887_inp["Cutpoints"], D2887_inp["Temp"], D2887_calc["Cutpoints"], D2887_calc["Temp"])
 		plt.legend(["input", "calc"])
 		plt.show()
 	else:
 		pass
 
-	TBP_50 = LFO_D2887_inp["Temp"][4] * 1.8 + 32 # F
+	TBP_50 = D2887_inp["Temp"][4] * 1.8 + 32 # F
 
-	LFO_D2887_calc["Temp"] = LFO_D2887_calc["Temp"] * 1.8 + 32
+	D2887_calc["Temp"] = D2887_calc["Temp"] * 1.8 + 32
 
 	WiCViD = {"i": [7, 6, 5, 4, 3, 2, 1],
 			  "Cut Point Range": ["10 - 5 %", "30 - 10 %", "50 - 30 %", "70 - 50 %", "90 - 70 %", "95 - 90 %", "100 - 95 %"],
@@ -59,46 +57,46 @@ def D2887wtSIMDIStoTBPvol(D2887_inp, plottt):
 	dT = []
 
 	i = 1
-	for LFO_dT in LFO_D2887_calc["Temp"]:
+	for D2887_dT in D2887_calc["Temp"]:
 		if i != CP_step:
-			dT.append(abs(LFO_dT - LFO_D2887_calc["Temp"][i]))
+			dT.append(abs(D2887_dT - D2887_calc["Temp"][i]))
 			i = i + 1
 		else:
 			pass
 
-	for value in LFO_D2887_calc["Cutpoints"]:
+	for value in D2887_calc["Cutpoints"]:
 		if    5 <= value < 10:
-			position_dT = np.argwhere(LFO_D2887_calc["Cutpoints"] == value)
+			position_dT = np.argwhere(D2887_calc["Cutpoints"] == value)
 			position_dT = np.concatenate(position_dT)
 			V7.append(dT[int(position_dT)])
 			W7.append(WiCViD["C"][0] * pow(V7[-1], WiCViD["D"][0]))
 
 		elif 10 <= value < 30:
-			position_dT = np.argwhere(LFO_D2887_calc["Cutpoints"] == value)
+			position_dT = np.argwhere(D2887_calc["Cutpoints"] == value)
 			position_dT = np.concatenate(position_dT)
 			V6.append(dT[int(position_dT)])
 			W6.append(WiCViD["C"][1] * pow(V6[-1], WiCViD["D"][1]))
 
 		elif 30 <= value < 50:
-			position_dT = np.argwhere(LFO_D2887_calc["Cutpoints"] == value)
+			position_dT = np.argwhere(D2887_calc["Cutpoints"] == value)
 			position_dT = np.concatenate(position_dT)
 			V5.append(dT[int(position_dT)])
 			W5.append(WiCViD["C"][2] * pow(V5[-1], WiCViD["D"][2]))
 
 		elif 50 <= value < 70:
-			position_dT = np.argwhere(LFO_D2887_calc["Cutpoints"] == value)
+			position_dT = np.argwhere(D2887_calc["Cutpoints"] == value)
 			position_dT = np.concatenate(position_dT)
 			V4.append(dT[int(position_dT)])
 			W4.append(WiCViD["C"][3] * pow(V4[-1], WiCViD["D"][3]))
 
 		elif 70 <= value < 90:
-			position_dT = np.argwhere(LFO_D2887_calc["Cutpoints"] == value)
+			position_dT = np.argwhere(D2887_calc["Cutpoints"] == value)
 			position_dT = np.concatenate(position_dT)
 			V3.append(dT[int(position_dT)])
 			W3.append(WiCViD["C"][4] * pow(V3[-1], WiCViD["D"][4]))
 
 		elif 90 <= value < 95:
-			position_dT = np.argwhere(LFO_D2887_calc["Cutpoints"] == value)
+			position_dT = np.argwhere(D2887_calc["Cutpoints"] == value)
 			position_dT = np.concatenate(position_dT)
 			V2.append(dT[int(position_dT)])
 			W2.append(WiCViD["C"][5] * pow(V2[-1], WiCViD["D"][5]))
